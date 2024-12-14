@@ -2,43 +2,44 @@ import pandas as pd
 import streamlit as st
 
 
-data = {
-    "Comunicação e Linguagem": "data/comunicação.csv",
-    "Sentimentos e Emoções": "data/sentimentos.csv",
-    "Comportamentos Humanos": "data/comportamentos.csv",
-}
+df = pd.read_csv("data/PALAVRAS.csv",encoding='utf-8')
 
 st.title("Dicionário")
 
-categorias= st.multiselect(
+categoria= st.selectbox(
     label="Comece Selecionando uma Categoria:",
     placeholder="Digite Algo",
-    options=data
+    options= df[df['CATEGORIA'].notna()]['CATEGORIA'].unique()
 )
 
-if categorias:
-    li = []
-    for categoria in categorias:
-        df = pd.read_csv(data[categoria],encoding='utf-8')
-        li.append(df)
-
-    df = pd.concat(li,axis=0,ignore_index=True)
-    df = df[df['PALAVRA'].notna() & (df['PALAVRA'] != '')]
+if categoria:
+    df_palavras = df[(df['PALAVRA'].notna()) & (df['SIGNIFICADO'].notna())]
+    palavras_validas = df_palavras[df_palavras['CATEGORIA'] == categoria]['PALAVRA'].sort_values()
 
     palavra = st.selectbox(
         label='Pesquise por uma Palavra',
         placeholder='Digite Algo',
-        options=df.sort_values('PALAVRA')
+        options=palavras_validas
     )
 
     if palavra:
-        linha = df[df['PALAVRA']==palavra].iloc[0]
+        st.markdown("<style>img {border-radius:10px;}</style>", unsafe_allow_html=True)
 
-        st.subheader(linha['PALAVRA'].upper())
+        linha = df_palavras[df_palavras['PALAVRA']==palavra].iloc[0]
+
+        tipo = str(linha['TIPO']) if pd.notna(linha['TIPO']) else ""
+
+        st.markdown(f"#### {linha['PALAVRA'].upper()} {'- '+f'_{tipo}_' if tipo!='' else ''}")
         st.markdown(f":blue-background[Significado:] {linha['SIGNIFICADO']}")
-        st.markdown(f":blue-background[Exemplo:] {linha['EXEMPLO']}")
+        st.markdown(f":grey-background[Exemplo:] {linha['EXEMPLO']}")
 
-        st.write(f"Sinônimos de {palavra}:")
-        for significado in linha['SINÔNIMO'].split(','):
-            st.markdown(f'- {significado.title()}')
-        
+        if pd.notna(linha['IMAGEM']):
+            st.image(linha['IMAGEM'], use_container_width=True)
+
+        # Exibir sinônimos, se disponíveis
+        if pd.notna(linha['SINÔNIMO']):
+            st.write(f"Sinônimos de {palavra}:")
+            for sinonimo in linha['SINÔNIMO'].split(','):
+                st.markdown(f'* {sinonimo.title()}')
+        else:
+            st.text('Sinônimos indisponíveis no momento.')
