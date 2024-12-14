@@ -42,8 +42,11 @@ if palavra:
 
     if pd.notna(linha['IMAGEM']):
         st.image(linha['IMAGEM'], use_container_width=True)
+    st.divider()
     if pd.notna(linha['DERIVADAS']):
         st.markdown(f"**:grey-background[Palavras Derivadas de {palavra}]** : *{linha['DERIVADAS']}*")
 
     if pd.notna(linha['SINÔNIMO']):
-        st.markdown(f"**Sinônimos de {palavra.title()}:** {' '.join(f':grey-background[{i}]' for i in linha['SINÔNIMO'].split(','))}")
+        st.markdown(f"**Sinônimos de {palavra.title()}:** {' '.join(f':green-background[{i}]' for i in linha['SINÔNIMO'].split(','))}")
+    # if pd.notna(linha['ANTÔNIMO']):
+    #     st.markdown(f"**Contrário de {palavra.title()}:** {' '.join(f':red-background[{i}]' for i in linha['ANTÔNIMO'].split(','))}")
