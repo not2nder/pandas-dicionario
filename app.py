@@ -42,12 +42,8 @@ if categoria:
             st.image(linha['IMAGEM'], use_container_width=True)
         if pd.notna(linha['DERIVADAS']):
             st.markdown(f"**:grey-background[Palavras Derivadas de {palavra}]** : *{linha['DERIVADAS']}*")
-        
 
-        # Exibir sinônimos, se disponíveis
         if pd.notna(linha['SINÔNIMO']):
             st.write(f"Sinônimos de {palavra}:")
             for sinonimo in linha['SINÔNIMO'].split(','):
                 st.markdown(f'* {sinonimo.title()}')
-        else:
-            st.text('Sinônimos indisponíveis no momento.')
