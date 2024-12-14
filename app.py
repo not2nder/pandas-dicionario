@@ -21,7 +21,7 @@ if grupo != "NÃO AGRUPAR":
     )
     palavras_validas = df_palavras[df_palavras[grupo] == categoria]['PALAVRA'].sort_values()
 else:
-    palavras_validas = df_palavras
+    palavras_validas = df_palavras.sort_values('PALAVRA')
 
 palavra = st.selectbox(
     label='Pesquise por uma Palavra',
@@ -46,4 +46,4 @@ if palavra:
         st.markdown(f"**:grey-background[Palavras Derivadas de {palavra}]** : *{linha['DERIVADAS']}*")
 
     if pd.notna(linha['SINÔNIMO']):
-        st.markdown(f"**Sinônimos de {palavra}:** {' '.join(f':grey-background[{i}]' for i in linha['SINÔNIMO'].split(','))}")
+        st.markdown(f"**Sinônimos de {palavra.title()}:** {' '.join(f':grey-background[{i}]' for i in linha['SINÔNIMO'].split(','))}")
