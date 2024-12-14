@@ -44,6 +44,4 @@ if categoria:
             st.markdown(f"**:grey-background[Palavras Derivadas de {palavra}]** : *{linha['DERIVADAS']}*")
 
         if pd.notna(linha['SINÔNIMO']):
-            st.write(f"Sinônimos de {palavra}:")
-            for sinonimo in linha['SINÔNIMO'].split(','):
-                st.markdown(f'* {sinonimo.title()}')
+            st.markdown(f"**Sinônimos de {palavra}:** {' '.join(f':grey-background[{i}]' for i in linha['SINÔNIMO'].split(','))}")
